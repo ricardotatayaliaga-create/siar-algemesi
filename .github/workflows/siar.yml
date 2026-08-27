@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 7 * * *"
 
+permissions:
+  contents: write
+
 jobs:
   consultar:
     runs-on: ubuntu-latest
@@ -25,3 +28,11 @@ jobs:
         env:
           SIAR_TOKEN: ${{ secrets.SIAR_TOKEN }}
         run: python siar.py
+
+      - name: Guardar datos históricos
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add datos_algemesi.csv
+          git diff --cached --quiet || git commit -m "Actualizar datos meteorológicos"
+          git push
