@@ -29,10 +29,15 @@ jobs:
           SIAR_TOKEN: ${{ secrets.SIAR_TOKEN }}
         run: python siar.py
 
-      - name: Guardar datos históricos
+      - name: Comprobar archivo generado
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add datos_algemesi.csv
-          git diff --cached --quiet || git commit -m "Actualizar datos meteorológicos"
-          git push
+          echo "Archivos del repositorio:"
+          ls -la
+          echo "Contenido del CSV:"
+          cat datos_algemesi.csv
+
+      - name: Subir datos como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: datos-algemesi
+          path: datos_algemesi.csv
